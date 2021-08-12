@@ -10,6 +10,7 @@ import {
     Stack,
     Image,
 } from '@chakra-ui/react';
+import { useRouter } from 'next/router'
 
 import { useForm, SubmitHandler } from 'react-hook-form'
 
@@ -20,9 +21,28 @@ interface Credentials {
 
 export default function Login(props: Credentials) {
 
+    const router = useRouter()
+
     const { register, handleSubmit, watch, formState: { errors } } = useForm<Credentials>()
 
-    const onSubmit: SubmitHandler<Credentials> = data => console.log(data)
+    const onSubmit: SubmitHandler<Credentials> = async data => {
+        try {
+
+            const res = await fetch('api/login', {
+                method: 'POST',
+                body: JSON.stringify({ ...data })
+            })
+
+            const userLoginData = await res.json()
+            localStorage.setItem('token', userLoginData.token);
+            router.push('/')
+
+
+
+        } catch (err) {
+            console.log('Something went wrong ' + err)
+        }
+    }
 
     return (
         <Stack minH={'100vh'} direction={{ base: 'column', md: 'row' }}>
