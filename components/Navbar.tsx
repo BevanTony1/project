@@ -1,7 +1,12 @@
 import { Box, Button, Flex, Text, IconButton, Spacer, useColorMode, useColorModeValue, useDisclosure, Collapse, Center, Avatar, Menu, MenuButton, MenuList, MenuGroup, MenuDivider, MenuItem } from '@chakra-ui/react'
 import Link from 'next/link'
 import { HamburgerIcon, CloseIcon, SunIcon, MoonIcon, TriangleDownIcon } from '@chakra-ui/icons';
+import { signIn, signOut, useSession } from 'next-auth/client'
+
 const Navbar = () => {
+
+    const [session] = useSession()
+
 
     const { isOpen, onToggle } = useDisclosure()
     const { colorMode, toggleColorMode } = useColorMode()
@@ -39,6 +44,11 @@ const Navbar = () => {
                     <DesktopNav />
                 </Flex>
                 <Spacer />
+                {(!session) ? (
+                    <Button onClick={() => signIn()}>
+                        Login
+                    </Button>
+                ) : (
                 <Menu>
 
                     <MenuButton borderRadius='full' as={IconButton} variant='outline' aria-label='Profile Info'>
@@ -56,10 +66,13 @@ const Navbar = () => {
                         <MenuGroup>
                             <MenuItem>Settings</MenuItem>
                             <MenuItem onClick={toggleColorMode}>Dark Mode</MenuItem>
-                            <MenuItem>Logout</MenuItem>
+                                    <MenuItem onClick={() => signOut()}>Logout</MenuItem>
                         </MenuGroup>
                     </MenuList>
                 </Menu>
+                )}
+
+
                 {/* <IconButton onClick={toggleColorMode} aria-label="Toggle Theme" variant={'outline'}>
                     {colorMode === 'light' ? <SunIcon /> : <MoonIcon />}
 
