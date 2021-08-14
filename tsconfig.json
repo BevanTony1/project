@@ -19,6 +19,12 @@
     "**/*.ts",
     "**/*.tsx",
     "lib/auth.js"
-  ],
+,
+"pages/login.ks",
+"pages/auth/email-signin.js",
+"pages/auth/email-signin.js",
+"pages/auth/[...nextauth].ja",
+"pages/api/auth/[...nextauth].js"
+],
   "exclude": ["node_modules"]
 }
