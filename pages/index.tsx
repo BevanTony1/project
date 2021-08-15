@@ -8,6 +8,9 @@ export default function Home() {
 
   const [session, loading] = useSession()
 
+
+  console.log(session)
+
   if (loading) {
     return (
       'Loading...'
@@ -15,9 +18,7 @@ export default function Home() {
   }
 
 
-
   return (
-
     <Box>
       Hello world
     </Box>

@@ -1,6 +1,10 @@
 import NextAuth from "next-auth";
 import Providers from "next-auth/providers";
 
+
+
+
+
 export default NextAuth({
     // Configure one or more authentication providers
     providers: [
@@ -47,21 +51,17 @@ export default NextAuth({
     },
     callbacks: {
 
-        async session(session, token) {
-
-
-            session.token = token.user
+        async session(session, token: any) {
+            session.user = undefined
+            session.full_name = token.user.full_name
+            session.token = token.user.token
             return session;
         },
 
-        async jwt(token, user, account, profile) {
+        async jwt(token, user) {
 
-
-            if (account?.accessToken) {
-                token.accessToken = account.accessToken
-            }
             if (typeof user !== typeof undefined) {
-                token.user = user?.token;
+                token.user = user
             }
             return token;
         }
