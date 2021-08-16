@@ -4,7 +4,6 @@ import Providers from "next-auth/providers";
 
 
 
-
 export default NextAuth({
     // Configure one or more authentication providers
     providers: [
@@ -37,10 +36,11 @@ export default NextAuth({
 
                 // If no error and we have user data, return it
                 if (res.ok && user) {
+                    user.email = credentials.username
                     return user
                 }
                 // Return null if user data could not be retrieved
-                return null
+                return false
             }
         })
     ],
@@ -49,14 +49,27 @@ export default NextAuth({
         // Seconds - How long until an idle session expires and is no longer valid.
         maxAge: 30 * 24 * 60 * 60, // 30 days
     },
+
+
+    pages: {
+        signIn: '/login',
+        // error: '/login'
+    },
     callbacks: {
+
 
         async session(session, token: any) {
             session.user = undefined
             session.full_name = token.user.full_name
+            session.email = token.user.email
             session.token = token.user.token
             return session;
         },
+
+        async redirect(url, baseUrl) {
+            return baseUrl
+        },
+
 
         async jwt(token, user) {
 
@@ -64,7 +77,10 @@ export default NextAuth({
                 token.user = user
             }
             return token;
-        }
+        },
+
+
+
     },
 
     // A database is optional, but required to persist accounts in a database

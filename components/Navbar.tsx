@@ -45,7 +45,7 @@ const Navbar = () => {
                 </Flex>
                 <Spacer />
                 {(!session) ? (
-                    <Button onClick={() => signIn()}>
+                    <Button onClick={() => signIn(null)}>
                         Login
                     </Button>
                 ) : (
@@ -66,7 +66,7 @@ const Navbar = () => {
                         <MenuGroup>
                             <MenuItem>Settings</MenuItem>
                             <MenuItem onClick={toggleColorMode}>Dark Mode</MenuItem>
-                                    <MenuItem onClick={() => signOut()}>Logout</MenuItem>
+                                    <MenuItem onClick={() => signOut({ callbackUrl: 'http://localhost:3000/login' })}>Logout</MenuItem>
                         </MenuGroup>
                     </MenuList>
                 </Menu>

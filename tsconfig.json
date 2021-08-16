@@ -25,6 +25,8 @@
 "pages/auth/email-signin.js",
 "pages/auth/[...nextauth].ja",
 "pages/api/auth/[...nextauth].js"
+,
+"pages/login.tsx"
 ],
   "exclude": ["node_modules"]
 }
