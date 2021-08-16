@@ -30,8 +30,8 @@ export default function SignIn({ csrfToken }: any) {
                     {error && <SignInError />}
                     <FormControl as='form' method='post' action='/api/auth/callback/credentials'>
                         <input name='csrfToken' type='hidden' defaultValue={csrfToken} />
-                        <Input name='username' type='email' />
-                        <Input name='password' type='password' />
+                        <Input marginBottom='5' name='username' type='email' />
+                        <Input marginBottom='5' name='password' type='password' />
                         <Stack spacing={6}>
                             <Stack
                                 direction={{ base: 'column', sm: 'row' }}
