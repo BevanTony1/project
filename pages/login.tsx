@@ -1,14 +1,14 @@
+import Link from 'next/link'
+
 import {
     Button,
+    Text,
     Checkbox,
     Flex,
     FormControl,
-    FormLabel,
     Heading,
     Input,
-    Link,
     Stack,
-    useToast,
     Image,
     Box,
 } from '@chakra-ui/react';
@@ -38,13 +38,14 @@ export default function SignIn({ csrfToken }: any) {
                                 align={'start'}
                                 justify={'space-between'}>
                                 <Checkbox>Remember me</Checkbox>
-                                <Link color={'blue.500'}>Forgot password?</Link>
+                                <Link href='#' ><Text color='blue.200' _hover={{ cursor: 'pointer' }}>Forgot password?</Text></Link>
                             </Stack>
                             <Button type='submit' colorScheme={'blue'} variant={'solid'}>
                                 Sign in
                             </Button>
                         </Stack>
                     </FormControl>
+                    <Text>Don&apos;t have an Account?  <Link href='/signup'><Text _hover={{ cursor: 'pointer' }} color='blue.200'>Sign up!</Text></Link></Text>
                 </Stack>
             </Flex>
             <Flex flex={1}>
