@@ -12,12 +12,14 @@ import {
     Image,
     Box,
 } from '@chakra-ui/react';
-import { getCsrfToken } from 'next-auth/client'
+import { getCsrfToken, getSession } from 'next-auth/client'
 import { useRouter } from "next/router";
+import LoginForm from '../components/LoginForm'
 
 
 
 export default function SignIn({ csrfToken }: any) {
+
 
 
     const { error } = useRouter().query;
@@ -28,7 +30,8 @@ export default function SignIn({ csrfToken }: any) {
                     <Heading fontSize={'2xl'}>Sign in to your account</Heading>
 
                     {error && <SignInError />}
-                    <FormControl as='form' method='post' action='/api/auth/callback/credentials'>
+                    <LoginForm csrfToken={csrfToken} />
+                    {/* <FormControl as='form' method='post' action='/api/auth/callback/credentials'>
                         <input name='csrfToken' type='hidden' defaultValue={csrfToken} />
                         <Input marginBottom='5' name='username' type='email' />
                         <Input marginBottom='5' name='password' type='password' />
@@ -44,7 +47,7 @@ export default function SignIn({ csrfToken }: any) {
                                 Sign in
                             </Button>
                         </Stack>
-                    </FormControl>
+                    </FormControl> */}
                     <Text>Don&apos;t have an Account?  <Link href='/signup'><Text _hover={{ cursor: 'pointer' }} color='blue.200'>Sign up!</Text></Link></Text>
                 </Stack>
             </Flex>
@@ -71,8 +74,23 @@ const SignInError = () => {
     return <Box textColor='red.200'> {errorMessage}</Box>;
 };
 
+
+
+
 // This is the recommended way for Next.js 9.3 or newer
 export async function getServerSideProps(context: any) {
+    const { res, req } = context
+    const session = await getSession({ req })
+
+
+    if (session && res) {
+        res.writeHead(302, {
+            Location: '/'
+        })
+        res.end()
+        return;
+    }
+
     return {
         props: {
             csrfToken: await getCsrfToken(context)

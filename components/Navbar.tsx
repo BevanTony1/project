@@ -2,11 +2,11 @@ import { Box, Button, Flex, Text, IconButton, Spacer, useColorMode, useColorMode
 import Link from 'next/link'
 import { HamburgerIcon, CloseIcon, SunIcon, MoonIcon, TriangleDownIcon } from '@chakra-ui/icons';
 import { signIn, signOut, useSession } from 'next-auth/client'
+import { ProfileCard } from './ProfileCard';
 
 const Navbar = () => {
 
-    const [session] = useSession()
-
+    const [session, loading] = useSession()
 
     const { isOpen, onToggle } = useDisclosure()
     const { colorMode, toggleColorMode } = useColorMode()
@@ -45,9 +45,8 @@ const Navbar = () => {
                 </Flex>
                 <Spacer />
                 {(!session) ? (
-                    <Button onClick={() => signIn(null)}>
-                        Login
-                    </Button>
+                    <>
+                    </>
                 ) : (
                 <Menu>
 
@@ -56,7 +55,7 @@ const Navbar = () => {
                     </MenuButton>
                     <MenuList>
                         <MenuGroup>
-                            <MenuItem>Profile</MenuItem>
+                                    <Link href={`/${session.email}`}><MenuItem ><ProfileCard full_name={session.full_name} /></MenuItem></Link>
                         </MenuGroup>
                         <MenuDivider />
                         <MenuGroup>

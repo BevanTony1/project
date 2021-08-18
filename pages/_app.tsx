@@ -5,7 +5,6 @@ import Head from 'next/head'
 import customTheme from '../styles/theme'
 import { ChakraProvider } from '@chakra-ui/react'
 import { Provider } from "next-auth/client"
-import { getSession } from 'next-auth/client'
 
 
 function MyApp({ Component, pageProps }: AppProps) {

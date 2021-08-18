@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import {
     Box,
     Flex,
@@ -7,10 +8,12 @@ import {
     Container,
     Input,
     Button,
+    useToast,
     SimpleGrid,
 } from '@chakra-ui/react';
 import { useForm, SubmitHandler } from 'react-hook-form'
-
+import { getSession } from 'next-auth/client'
+import router from 'next/router';
 
 interface Signup {
     full_name: string
@@ -30,19 +33,51 @@ interface ParamsProps {
 
 export default function Signup() {
 
+
+    const toast = useToast()
+    const [loading, setLoading] = useState<boolean>(false)
     const { register, handleSubmit, watch, formState: { errors } } = useForm<Signup>()
 
     const onSubmit: SubmitHandler<Signup> = async (data) => {
-        const esc = encodeURIComponent;
-        var params: ParamsProps = { email: data.email, full_name: data.full_name, redirect_to: 'http://localhost:3000/login' }
-        const query = Object.keys(params).map(k => `${esc(k)}=${esc(params[k])}`).join('&')
-        const res = await fetch('http://0.0.0.0:8001/api/method/frappe.core.doctype.user.user.sign_up?' + query, {
-            method: "GET",
-            headers: {
-                "Accept": "application/json",
-                "Content-Type": "application/json",
-            },
-        })
+        try {
+            setLoading(true)
+            const esc = encodeURIComponent;
+            var params: ParamsProps = { email: data.email, full_name: data.full_name, redirect_to: 'http://localhost:3000/login' }
+            const query = Object.keys(params).map(k => `${esc(k)}=${esc(params[k])}`).join('&')
+            const res = await fetch('http://0.0.0.0:8001/api/method/frappe.core.doctype.user.user.sign_up?' + query, {
+                method: "GET",
+                headers: {
+                    "Accept": "application/json",
+                    "Content-Type": "application/json",
+                },
+            })
+            const message = await res.json()
+            if (message.message[1] == 'error') {
+
+                toast({
+                    title: message.message[2],
+                    description: message.message[3],
+                    status: "error",
+                    duration: 9000,
+                    isClosable: true,
+                })
+            } else {
+                toast({
+                    title: 'Successfully created your account',
+                    description: 'check email for confirmation',
+                    status: "success",
+                    duration: 9000,
+                    isClosable: true,
+                })
+                setLoading(true)
+                router.push('/login')
+            }
+
+        }
+        catch (err) {
+            console.log('Something went wrong')
+        }
+        setLoading(false)
     }
 
     return (
@@ -101,19 +136,38 @@ export default function Signup() {
                                 {...register('email')}
                             />
                         </Stack>
-                        <Button
-                            fontFamily={'heading'}
-                            mt={8}
-                            w={'full'}
-                            bgGradient="linear(to-r, red.400,pink.400)"
-                            color={'white'}
-                            _hover={{
-                                bgGradient: 'linear(to-r, red.400,pink.400)',
-                                boxShadow: 'xl',
-                            }}
-                            type='submit'>
-                            Submit
-                        </Button>
+                        {!loading ? (
+                            <Button
+                                fontFamily={'heading'}
+                                mt={8}
+                                w={'full'}
+                                bgGradient="linear(to-r, red.400,pink.400)"
+                                color={'white'}
+                                _hover={{
+                                    bgGradient: 'linear(to-r, red.400,pink.400)',
+                                    boxShadow: 'xl',
+                                }}
+                                type='submit'>
+                                Submit
+                            </Button>
+                        ) : (
+                            <Button
+                                fontFamily={'heading'}
+                                mt={8}
+                                w={'full'}
+                                isLoading
+                                loadingText="Submitting"
+                                bgGradient="linear(to-r, red.400,pink.400)"
+                                color={'white'}
+                                _hover={{
+                                    bgGradient: 'linear(to-r, red.400,pink.400)',
+                                    boxShadow: 'xl',
+                                }}
+                                type='submit'>
+                                Submit
+                            </Button>
+                        )}
+
                     </Box>
                     form
                 </Stack>
@@ -138,3 +192,23 @@ export default function Signup() {
     );
 }
 
+export async function getServerSideProps(context: any) {
+    const { res, req } = context
+    const session = await getSession({ req })
+
+
+    if (session && res) {
+        res.writeHead(302, {
+            Location: '/'
+        })
+        res.end()
+        return;
+    }
+
+    return {
+        props: {
+
+        }
+    }
+
+}
