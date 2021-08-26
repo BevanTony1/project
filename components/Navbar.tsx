@@ -1,15 +1,20 @@
-import { Box, Button, Flex, Text, IconButton, Spacer, useColorMode, useColorModeValue, useDisclosure, Collapse, Center, Avatar, Menu, MenuButton, MenuList, MenuGroup, MenuDivider, MenuItem } from '@chakra-ui/react'
+import { Box, Button, Flex, Text, IconButton, Spacer, useColorMode, useColorModeValue, useDisclosure, Collapse, Center, Avatar, Menu, MenuButton, MenuList, MenuGroup, MenuDivider, MenuItem, useToast } from '@chakra-ui/react'
 import Link from 'next/link'
 import { HamburgerIcon, CloseIcon, SunIcon, MoonIcon, TriangleDownIcon } from '@chakra-ui/icons';
+
 import { signIn, signOut, useSession } from 'next-auth/client'
 import { ProfileCard } from './ProfileCard';
+import { useRouter } from 'next/router'
 
 const Navbar = () => {
 
     const [session, loading] = useSession()
 
     const { isOpen, onToggle } = useDisclosure()
+    const router = useRouter()
+
     const { colorMode, toggleColorMode } = useColorMode()
+    const toast = useToast()
     return (
         <>
 
@@ -46,6 +51,9 @@ const Navbar = () => {
                 <Spacer />
                 {(!session) ? (
                     <>
+                        <Button variant='outline' colorScheme='messenger' onClick={() => router.push('/login')}>Sign In</Button>
+                        <Link href='/signup'><Button marginLeft='3' variant='solid' colorScheme='messenger'>Sign Up</Button></Link>
+
                     </>
                 ) : (
                 <Menu>
@@ -72,10 +80,6 @@ const Navbar = () => {
                 )}
 
 
-                {/* <IconButton onClick={toggleColorMode} aria-label="Toggle Theme" variant={'outline'}>
-                    {colorMode === 'light' ? <SunIcon /> : <MoonIcon />}
-
-                </IconButton> */}
             </Flex >
             <Collapse in={isOpen} animateOpacity>
                 <MobileNav />

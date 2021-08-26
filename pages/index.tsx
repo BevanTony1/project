@@ -2,34 +2,35 @@ import {
   Container,
   Heading,
   Box,
-  Button
+  Button,
+  Center,
 } from '@chakra-ui/react'
-import Image from 'next/image'
 import styles from '../styles/Home.module.scss'
-import { useSession, signIn } from "next-auth/client"
+import { useSession } from "next-auth/client"
 
 export default function Home() {
 
   const [session, loading] = useSession()
 
-  console.log(session)
 
-  if (!session) {
 
-    return (
-
-      <Button onClick={() => signIn(null)}>
-        Login
-      </Button>
-
-    )
-  }
 
   if (loading) {
     return (
       'Loading...'
     )
   }
+
+  if (!session) {
+    return (
+      <Box>
+        <Center>
+          Welcome!
+        </Center>
+      </Box>
+    )
+  }
+
 
 
   return (
@@ -38,3 +39,4 @@ export default function Home() {
     </Box>
   )
 }
+

@@ -1,6 +1,7 @@
 import Link from 'next/link'
 
 import {
+    chakra,
     Button,
     Text,
     Checkbox,
@@ -15,11 +16,18 @@ import {
 import { getCsrfToken, getSession } from 'next-auth/client'
 import { useRouter } from "next/router";
 import LoginForm from '../components/LoginForm'
+import NextImage from 'next/image'
 
+const CoverImg = chakra(NextImage, {
+    shouldForwardProp: (prop) => ['width', 'height', 'src', 'alt', 'quality', 'placeholder', 'blurDataURL', 'loader '].includes(prop),
+})
+
+const myLoader = ({ src, width, quality }: any) => {
+    return `${src}?w=${width}&q=${quality}`;
+};
 
 
 export default function SignIn({ csrfToken }: any) {
-
 
 
     const { error } = useRouter().query;
@@ -48,16 +56,21 @@ export default function SignIn({ csrfToken }: any) {
                             </Button>
                         </Stack>
                     </FormControl> */}
-                    <Text>Don&apos;t have an Account?  <Link href='/signup'><Text _hover={{ cursor: 'pointer' }} color='blue.200'>Sign up!</Text></Link></Text>
+                    <Text>Don&apos;t have an Account?  <Link href='/signup'><Text _hover={{ cursor: 'pointer' }} color='blue.500'>Sign up!</Text></Link></Text>
                 </Stack>
             </Flex>
             <Flex flex={1}>
-                <Image
-                    alt={'Login Image'}
-                    objectFit={'cover'}
+                <CoverImg
+                    w="auto"
+                    h="auto"
+                    loader={myLoader}
+                    width={800}
+                    quality={100}
+                    height={400}
                     src={
                         'https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1352&q=80'
                     }
+
                 />
             </Flex>
         </Stack>
